@@ -50,3 +50,23 @@ Route::get('/form', [FormController::class, 'index']);
 
 // 2. フォームの送信処理（POST）
 Route::post('/form', [FormController::class, 'submit']);
+
+
+//add login
+use App\Http\Controllers\AuthController;
+
+/*
+|--------------------------------------------------------------------------
+| 【新しい書き方】：コントローラー（AuthController）を使うログインのルート
+|--------------------------------------------------------------------------
+*/
+// 1. ログイン画面を表示するルート（GETアクセス）
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
+// 2. ログイン処理を実行するルート（POSTアクセス）
+Route::post('/login', [AuthController::class, 'login']);
+
+// 3. ログイン成功後に移動するダッシュボード画面（仮のページ）
+Route::get('/dashboard', function () {
+    return 'ログイン成功！ようこそダッシュボードへ！';
+})->middleware('auth');
