@@ -37,5 +37,11 @@
 
         <button type="submit">ログインする</button>
     </form>
+
+    <!-- 追加 新規登録画面へのリンク -->
+    <p style="margin-top: 20px;">
+         <a href="/register">新規登録はこちら</a>
+    </p>
+
 </body>
 </html>

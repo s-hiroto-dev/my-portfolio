@@ -61,4 +61,36 @@ class AuthController extends Controller
         // 3. ログイン画面にリダイレクトする
         return redirect('/login');
     }
+
+    /**
+     * 新規登録画面を表示する
+     */
+    public function showRegisterForm()
+    {
+        return view('register'); // 後で作る新規登録ビュー
+    }
+
+    /**
+     * 新規登録処理を実行する
+     */
+    public function register(Request $request)
+    {
+        // 1. バリデーション（入力チェック）
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6'],
+        ]);
+
+        // 2. ユーザーの新規作成
+        $user = \App\Models\User::create([
+            'name' => $request->name,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        ]);
+
+        // 3. 登録したユーザーでそのままログイン（自動ログイン）
+        \Illuminate\Support\Facades\Auth::login($user);
+
+        // 4. ダッシュボードへリダイレクト
+        return redirect('/dashboard');
+    }
 }

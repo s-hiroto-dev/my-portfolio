@@ -87,3 +87,8 @@ Route::get('/dashboard', function () {
 //add
 // ログアウト処理を実行するルート（POSTアクセス）
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//add
+// --- 新規登録用のルート ---
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
