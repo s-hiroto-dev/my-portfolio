@@ -2,18 +2,18 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>フォームテスト</title>
+    <title>ログイン</title>
 </head>
 <body>
-    <h1>文字入力テスト</h1>
+    <h1>ログイン画面</h1>
 
-    <!-- フォームの送信先を /form に設定（POST送信） -->
-    <form action="/form" method="POST">
+    <!-- ログインフォームの送信先を /login に設定（POST送信） -->
+    <form action="/login" method="POST">
         @csrf <!-- Laravelのセキュリティ対策（必須） -->
 
-        <!-- 名前入力欄 -->
+        <!-- ユーザー名入力欄 -->
         <div>
-            <label for="name">お名前：</label>
+            <label for="name">ユーザー名：</label>
             <input type="text" id="name" name="name" value="{{ old('name') }}">
             <!-- エラーメッセージ表示 -->
             @error('name')
@@ -23,19 +23,19 @@
 
         <br>
 
-        <!-- メールアドレス入力欄 -->
+        <!-- パスワード入力欄 -->
         <div>
-            <label for="email">メールアドレス：</label>
-            <input type="text" id="email" name="email" value="{{ old('email') }}">
+            <label for="password">パスワード：</label>
+            <input type="password" id="password" name="password">
             <!-- エラーメッセージ表示 -->
-            @error('email')
+            @error('password')
                 <div style="color: red;">{{ $message }}</div>
             @enderror
         </div>
 
         <br>
 
-        <button type="submit">送信する</button>
+        <button type="submit">ログインする</button>
     </form>
 </body>
 </html>
