@@ -45,4 +45,20 @@ class AuthController extends Controller
             'name' => 'ユーザー名またはパスワードが正しくありません。',
         ])->onlyInput('name');
     }
+
+    /**
+     * ログアウト処理を実行する
+     */
+    public function logout(Request $request)
+    {
+        // 1. ユーザーの認証状態を解除する
+        Auth::logout();
+
+        // 2. セッションを無効化し、セキュリティトークンを再生成する
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // 3. ログイン画面にリダイレクトする
+        return redirect('/login');
+    }
 }

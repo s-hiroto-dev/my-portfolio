@@ -67,6 +67,23 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 // 3. ログイン成功後に移動するダッシュボード画面（仮のページ）
+/*
 Route::get('/dashboard', function () {
     return 'ログイン成功！ようこそダッシュボードへ！';
 })->middleware('auth');
+*/
+//logout機能追加
+// ログイン成功後に移動するダッシュボード画面
+Route::get('/dashboard', function () {
+    return '
+        <h1>ログイン成功！ようこそダッシュボードへ！</h1>
+        <form action="/logout" method="POST">
+            ' . csrf_field() . '
+            <button type="submit">ログアウトする</button>
+        </form>
+    ';
+})->middleware('auth');
+
+//add
+// ログアウト処理を実行するルート（POSTアクセス）
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
