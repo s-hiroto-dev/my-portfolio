@@ -29,4 +29,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // 【新しく追加】ユーザーは複数の就活記録を持つ
+    public function studyLogs()
+    {
+        return $this->hasMany(StudyLog::class);
+    }
 }

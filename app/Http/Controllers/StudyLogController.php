@@ -27,4 +27,14 @@ class StudyLogController extends Controller
         // 3. 保存が終わったらダッシュボード画面に引き返す（「記録したよ！」というメッセージ付き）
         return redirect()->back()->with('success', '就活の記録を保存しました！お疲れ様です！');
     }
+
+    // 【新しく追加】ダッシュボードを表示する処理（記録の一覧を渡す）
+    public function index()
+    {
+        // ログイン中のユーザーの記録を、新しい順（降順: latest）に取得
+        $studyLogs = auth()->user()->studyLogs()->latest()->get();
+
+        // ダッシュボードのビューに記録のデータを渡して表示する
+        return view('dashboard', compact('studyLogs'));
+    }
 }

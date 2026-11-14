@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController; // ← 今回新しく追加したコントローラーの読み込み
+use App\Http\Controllers\StudyLogController; //ここを新しく追加！
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,9 +90,14 @@ Route::get('/dashboard', function () {
 
 //add MVC 役割分担のため、web.phpにはhtml処理を書かないで中継だけにする
 // 【新しい書き方】ビューファイル（dashboard.blade.php）を呼び出すルート
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware('auth');
+// ↓
+// 今までは routes/web.php の中で直接 return view('dashboard'); していたけれど、
+//これからはさっき作った StudyLogController の index メソッドを通すように
+// 【変更後】ダッシュボード表示をコントローラー経由にする
+Route::get('/dashboard', [StudyLogController::class, 'index'])->name('dashboard')->middleware('auth');
 
 //add
 // ログアウト処理を実行するルート（POSTアクセス）
@@ -103,6 +109,5 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 
 //add
-use App\Http\Controllers\StudyLogController; // ← コントローラーの読み込みを追加
 // --- 就活記録用のルート ---
 Route::post('/study-logs', [StudyLogController::class, 'store'])->name('study-logs.store')->middleware('auth');

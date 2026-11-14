@@ -17,7 +17,7 @@
 <body>
     <div class="container">
         <!-- ログインしているユーザーのカスタムユーザー名（nameカラム）を表示 -->
-        <h1>ログイン成功！ようこそダッシュボードへ、{{ Auth::user()->name }} さん！</h1>
+        <h1>ようこそダッシュボードへ、{{ Auth::user()->name }} さん！</h1>
         <p>ここは認証済みのユーザーだけが見ることができるダッシュボード画面です。</p>
 
         <!-- 【新しく追加】保存成功時のメッセージ表示 -->
@@ -42,6 +42,27 @@
                 </div>
                 <button type="submit" style="background-color: #3182ce; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px;">記録を保存する</button>
             </form>
+        </div>
+
+        <!-- 【新しく追加】これまでの就活記録一覧 -->
+        <div style="background: #fff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px;">
+            <h3>📊 これまでの就活の記録</h3>
+            
+            @if($studyLogs->isEmpty())
+                <p style="color: #718096;">まだ記録がありません。上のフォームから最初の記録をつけてみましょう！</p>
+            @else
+                <ul style="list-style: none; padding: 0;">
+                    @foreach($studyLogs as $log)
+                        <li style="padding: 12px 0; border-bottom: 1px solid #edf2f7;">
+                            <strong style="color: #3182ce; font-size: 16px;">⏱️ {{ $log->duration_minutes }} 分</strong>
+                            <span style="color: #718096; font-size: 14px; margin-left: 10px;">({{ $log->created_at->format('Y年m月d日 H:i') }})</span>
+                            @if($log->memo)
+                                <p style="margin: 5px 0 0 0; color: #4a5568;">メモ: {{ $log->memo }}</p>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
         <!-- ログアウト用のフォーム（POST送信とCSRF保護） -->
