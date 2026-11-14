@@ -74,6 +74,8 @@ Route::get('/dashboard', function () {
 */
 //logout機能追加
 // ログイン成功後に移動するダッシュボード画面
+/*
+// 【古い書き方】以前、ルートファイルに直接HTML文字列を書いていたコード
 Route::get('/dashboard', function () {
     return '
         <h1>ログイン成功！ようこそダッシュボードへ！</h1>
@@ -82,6 +84,13 @@ Route::get('/dashboard', function () {
             <button type="submit">ログアウトする</button>
         </form>
     ';
+})->middleware('auth');
+*/
+
+//add MVC 役割分担のため、web.phpにはhtml処理を書かないで中継だけにする
+// 【新しい書き方】ビューファイル（dashboard.blade.php）を呼び出すルート
+Route::get('/dashboard', function () {
+    return view('dashboard');
 })->middleware('auth');
 
 //add
