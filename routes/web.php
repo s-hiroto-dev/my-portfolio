@@ -101,3 +101,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // --- 新規登録用のルート ---
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
+//add
+use App\Http\Controllers\StudyLogController; // ← コントローラーの読み込みを追加
+// --- 就活記録用のルート ---
+Route::post('/study-logs', [StudyLogController::class, 'store'])->name('study-logs.store')->middleware('auth');
