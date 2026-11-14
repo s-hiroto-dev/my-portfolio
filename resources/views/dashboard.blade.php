@@ -88,11 +88,73 @@
 
             <!-- 【左側】：大きなカレンダーを表示するエリア -->
             <div class="card" style="min-height: 500px;">
-                <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">📅 就活カレンダー</h3>
-                <div style="text-align: center; padding: 80px 0; color: #a0aec0;">
-                    <p style="font-size: 18px; font-weight: bold; color: #4a5568;">ここに大きなカレンダーを実装していくよ！</p>
-                    <p style="font-size: 14px;">日付のマスごとに、その日の学習時間やメモが書き込まれる予定です。</p>
-                </div>
+                <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>📅 就活カレンダー ({{ $year }}年 {{ $month }}月)</span>
+                </h3>
+
+                <!-- カレンダーのテーブル表 -->
+                <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+                    <thead>
+                        <tr style="background-color: #f7fafc; color: #4a5568; font-size: 14px;">
+                            <th style="padding: 10px; border: 1px solid #e2e8f0; color: #e53e3e;">日</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">月</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">火</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">水</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">木</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0;">金</th>
+                            <th style="padding: 10px; border: 1px solid #e2e8f0; color: #3182ce;">土</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $currentDay = 1;
+                            $totalCells = $startDayOfWeek + $daysInMonth;
+                            $weeks = ceil($totalCells / 7);
+                        @endphp
+
+                        @for ($i = 0; $i < $weeks; $i++)
+                            <tr>
+                                @for ($j = 0; $j < 7; $j++)
+                                    @php
+                                        $cellIndex = $i * 7 + $j;
+                                        $isCellActive = ($cellIndex >= $startDayOfWeek && $currentDay <= $daysInMonth);
+                                    @endphp
+
+                                    <td style="height: 80px; vertical-align: top; border: 1px solid #e2e8f0; padding: 6px; background-color: {{ $isCellActive ? '#fff' : '#f7fafc' }};">
+                                        @if ($isCellActive)
+                                            @php
+                                                $dateString = sprintf('%04d-%02d-%02d', $year, $month, $currentDay);
+                                                $dayLogs = $logsByDate[$dateString] ?? [];
+                                                $totalMinutes = collect($dayLogs)->sum('duration_minutes');
+                                            @endphp
+
+                                            <!-- 日付の数字 -->
+                                            <div style="font-size: 13px; font-weight: bold; color: #2d3748; margin-bottom: 4px;">
+                                                {{ $currentDay }}
+                                            </div>
+
+                                            <!-- その日の記録がある場合の表示 -->
+                                            @if ($totalMinutes > 0)
+                                                <div style="background-color: #ebf8ff; border-left: 3px solid #3182ce; padding: 3px 4px; font-size: 11px; border-radius: 2px;">
+                                                    <div style="font-weight: bold; color: #2b6cb0;">⏱️ {{ $totalMinutes }}分</div>
+                                                    @foreach ($dayLogs as $log)
+                                                        @if($log->memo)
+                                                            <div style="color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $log->memo }}">
+                                                                {{ $log->memo }}
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                            @php $currentDay++; @endphp
+                                        @endif
+                                    </td>
+                                @endfor
+                            </tr>
+                        @endfor
+                    </tbody>
+                </table>
             </div>
 
             <!-- 【右側】：記録をつけるフォーム ＆ これまでの記録一覧 -->
@@ -116,7 +178,7 @@
 
                 <!-- これまでの就活記録一覧 -->
                 <div class="card">
-                    <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">📊 これまでの就活の記録</h3>
+                    <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">📊 これまでの就活記録</h3>
                     
                     @if($studyLogs->isEmpty())
                         <p style="color: #718096; font-size: 14px;">まだ記録がありません。上のフォームから最初の記録をつけてみましょう！</p>
@@ -147,7 +209,7 @@
 
 <!--
 ================================================================================
-【古いコードの保持】：直前まで使っていた縦並びレイアウトのコード
+【古いコードの保持】：直前まで使っていた初期のシンプルなダッシュボードのコード
 ================================================================================
 <!DOCTYPE html>
 <html lang="ja">
