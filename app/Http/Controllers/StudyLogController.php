@@ -75,8 +75,43 @@ class StudyLogController extends Controller
         }
         // ------------------------------------------------
 
-        // ダッシュボードのビューに記録とカレンダー情報を一緒に渡す
+        // ====================================================================
+        // 【新しいコード】連続取り組み日数（ストリーク）の計算ロジック
+        // ====================================================================
+        $streakDays = 0;
+        $loggedDates = auth()->user()->studyLogs()
+            ->selectRaw('DATE(study_date) as s_date')
+            ->distinct()
+            ->orderBy('s_date', 'desc')
+            ->pluck('s_date')
+            ->toArray();
+
+        if (!empty($loggedDates)) {
+            $today = \Carbon\Carbon::today();
+            $latestDate = \Carbon\Carbon::parse($loggedDates[0]);
+            
+            // 最新の記録日が「今日」または「昨日」であれば連続カウントを有効にする
+            if ($latestDate->isToday() || $latestDate->isYesterday()) {
+                $expectedDate = $latestDate->copy();
+                foreach ($loggedDates as $dateStr) {
+                    $d = \Carbon\Carbon::parse($dateStr);
+                    if ($d->toDateString() === $expectedDate->toDateString()) {
+                        $streakDays++;
+                        $expectedDate->subDay(); // 1日前を期待値に設定して遡る
+                    } else {
+                        break; // 日付が途切れたら終了
+                    }
+                }
+            }
+        }
+        // ====================================================================
+        /*
+        // 【古いコード】連続日数計算がなかった頃のビュー呼び出し
         return view('dashboard', compact('studyLogs', 'year', 'month', 'daysInMonth', 'startDayOfWeek', 'logsByDate'));
+        */
+
+        // ダッシュボードのビューに記録とカレンダー情報、連続日数を一緒に渡す
+        return view('dashboard', compact('studyLogs', 'year', 'month', 'daysInMonth', 'startDayOfWeek', 'logsByDate', 'streakDays'));
     
     }
 

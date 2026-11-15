@@ -27,6 +27,8 @@
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-wrap: wrap; /* 【追加】画面が狭いときに自然に折り返す */
+            gap: 15px;      /* 【追加】要素同士の間隔を空ける */
         }
         /* 左右2カラムのグリッドレイアウト */
         .dashboard-grid {
@@ -70,10 +72,39 @@
                 <h1 style="margin: 0; font-size: 22px;">ようこそダッシュボードへ、{{ Auth::user()->name }} さん！</h1>
                 <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">就活記録日記！</p>
             </div>
+            <!-- ==================================================================== -->
+            <!-- 【旧コード】連続取り組み日数のバッジ表示 -->
+            <!-- ストリークバッジが単体で置かれていたために、分割表示され縦になってしまっていた -->
+            <!-- ==================================================================== -->
+            <!--
+            <div style="display: flex; align-items: center; background: #fffaf0; border: 1px solid #feebc8; padding: 8px 16px; border-radius: 6px;">
+                <span style="font-size: 20px; margin-right: 8px;">🔥</span>
+                <div>
+                    <div style="font-size: 11px; color: #c05621; font-weight: bold;">連続継続中</div>
+                    <div style="font-size: 16px; font-weight: bold; color: #dd6b20;">{{ $streakDays }} 日目</div>
+                </div>
+            </div>
+
             <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                 @csrf
                 <button type="submit" class="logout-btn">ログアウトする</button>
             </form>
+            -->
+            <!-- 【追加】右側の「バッジ」と「ログアウトボタン」をひとまとめのグループにした -->
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="display: flex; align-items: center; background: #fffaf0; border: 1px solid #feebc8; padding: 6px 14px; border-radius: 6px; white-space: nowrap;">
+                    <span style="font-size: 20px; margin-right: 8px;">🔥</span>
+                    <div>
+                        <div style="font-size: 10px; color: #c05621; font-weight: bold; line-height: 1;">連続継続中</div>
+                        <div style="font-size: 15px; font-weight: bold; color: #dd6b20; line-height: 1.2;">{{ $streakDays }} 日目</div>
+                    </div>
+                </div>
+
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="logout-btn">ログアウトする</button>
+                </form>
+            </div>
         </div>
 
         <!-- 保存成功時のメッセージ表示 -->
