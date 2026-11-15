@@ -14,5 +14,6 @@ class StudyLog extends Model
         'user_id',
         'duration_minutes',
         'memo',
+        'study_date', // ここに日付入力日追加
     ];
 }

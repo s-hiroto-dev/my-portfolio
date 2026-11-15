@@ -164,6 +164,15 @@
                     <h3 style="margin-top: 0; border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">⏱️ 記録をつける</h3>
                     <form action="{{ route('study-logs.store') }}" method="POST">
                         @csrf
+
+                        <!-- ==================================================================== -->
+                        <!-- 【新しいコード】日付を選ぶ入力欄を追加 -->
+                        <!-- ==================================================================== -->
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">日付:</label>
+                            <input type="date" name="study_date" value="{{ date('Y-m-d') }}" required style="padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid #cbd5e0; border-radius: 4px;">
+                        </div>
+
                         <div style="margin-bottom: 12px;">
                             <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">向き合った時間（分）:</label>
                             <input type="number" name="duration_minutes" placeholder="例: 60" required style="padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid #cbd5e0; border-radius: 4px;">
@@ -174,6 +183,23 @@
                         </div>
                         <button type="submit" style="background-color: #3182ce; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">記録を保存する</button>
                     </form>
+                    <!-- ==================================================================== -->
+                    <!-- 【古いコード】日付入力欄がなかった頃のフォーム -->
+                    <!-- ==================================================================== -->
+                    <!--
+                    <form action="{{ route('study-logs.store') }}" method="POST">
+                        @csrf
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">向き合った時間（分）:</label>
+                            <input type="number" name="duration_minutes" placeholder="例: 60" required style="padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid #cbd5e0; border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">やったこと・メモ:</label>
+                            <textarea name="memo" placeholder="例: ESの自己PR欄を修正した、企業説明会に参加した" rows="3" style="padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid #cbd5e0; border-radius: 4px;"></textarea>
+                        </div>
+                        <button type="submit" style="background-color: #3182ce; color: white; border: none; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">記録を保存する</button>
+                    </form>
+                    -->
                 </div>
 
                 <!-- これまでの就活記録一覧 -->
