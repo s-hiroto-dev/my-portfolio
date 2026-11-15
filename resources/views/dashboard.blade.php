@@ -134,7 +134,28 @@
                                             </div>
 
                                             <!-- その日の記録がある場合の表示 -->
-                                            @if ($totalMinutes > 0)
+                                            @if (count($dayLogs) > 0)
+                                                <!-- ==================================================================== -->
+                                                <!-- 【新しいコード】時間を合算せず、記録ごとに個別に箇条書きで表示する -->
+                                                <!-- ==================================================================== -->
+                                                @foreach ($dayLogs as $log)
+                                                    <div style="background-color: #ebf8ff; border-left: 3px solid #3182ce; padding: 2px 4px; font-size: 10px; border-radius: 2px; margin-bottom: 2px;">
+                                                        <div style="font-weight: bold; color: #2b6cb0;">⏱️ {{ $log->duration_minutes }}分</div>
+                                                        @if($log->memo)
+                                                            <div style="color: #4a5568; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ $log->memo }}">
+                                                                {{ $log->memo }}
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+
+                                                <!-- ==================================================================== -->
+                                                <!-- 【古いコード】時間を合算して1つのブロックにまとめて表示していた頃のコード -->
+                                                <!-- ==================================================================== -->
+                                                <!--
+                                                @php
+                                                    $totalMinutes = collect($dayLogs)->sum('duration_minutes');
+                                                @endphp
                                                 <div style="background-color: #ebf8ff; border-left: 3px solid #3182ce; padding: 3px 4px; font-size: 11px; border-radius: 2px;">
                                                     <div style="font-weight: bold; color: #2b6cb0;">⏱️ {{ $totalMinutes }}分</div>
                                                     @foreach ($dayLogs as $log)
@@ -145,6 +166,7 @@
                                                         @endif
                                                     @endforeach
                                                 </div>
+                                                -->
                                             @endif
 
                                             @php $currentDay++; @endphp
