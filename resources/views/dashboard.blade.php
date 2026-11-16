@@ -102,8 +102,15 @@
                     </div>
                 </div>           
                 
+                @php
+                // 継続日数に応じて炎のサイズを大きくする（例: 基本20pxに、日数×3pxを足す。最大100pxまで）
+                $flameSize = min(20 + ($streakDays * 3), 100); 
+                @endphp
+
                 <div style="display: flex; align-items: center; background: #fffaf0; border: 1px solid #feebc8; padding: 6px 14px; border-radius: 6px; white-space: nowrap;">
-                    <span style="font-size: 20px; margin-right: 8px;">🔥</span>
+                    <!-- <span style="font-size: 20px; margin-right: 8px;">🔥</span> -->
+                     <!-- 変更　日数に応じて大きさが変わる炎 -->
+                    <span style="font-size: {{ $flameSize }}px; margin-right: 8px;">🔥</span>
                     <div>
                         <div style="font-size: 10px; color: #c05621; font-weight: bold; line-height: 1;">連続継続中</div>
                         <div style="font-size: 15px; font-weight: bold; color: #dd6b20; line-height: 1.2;">{{ $streakDays }} 日目</div>
