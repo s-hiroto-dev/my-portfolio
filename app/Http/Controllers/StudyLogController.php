@@ -45,6 +45,13 @@ class StudyLogController extends Controller
         // ログイン中のユーザーの記録を新しい順に取得
         $studyLogs = auth()->user()->studyLogs()->latest()->get();
 
+        //add
+        // ====================================================================
+        // 【新しいコード】これまでの総就活時間の集計
+        // ====================================================================
+        $totalMinutes = auth()->user()->studyLogs()->sum('duration_minutes');
+
+
         // --- ここからカレンダー用のデータ作成ロジック ---
         $year = request('year', date('Y'));
         $month = request('month', date('n'));
@@ -111,8 +118,8 @@ class StudyLogController extends Controller
         */
 
         // ダッシュボードのビューに記録とカレンダー情報、連続日数を一緒に渡す
-        return view('dashboard', compact('studyLogs', 'year', 'month', 'daysInMonth', 'startDayOfWeek', 'logsByDate', 'streakDays'));
-    
+        //return view('dashboard', compact('studyLogs', 'year', 'month', 'daysInMonth', 'startDayOfWeek', 'logsByDate', 'streakDays'));
+        return view('dashboard', compact('studyLogs', 'year', 'month', 'daysInMonth', 'startDayOfWeek', 'logsByDate', 'streakDays', 'totalMinutes'));
     }
 
     // 【新しく追加】就活記録を保存する処理

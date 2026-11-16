@@ -92,6 +92,16 @@
             -->
             <!-- 【追加】右側の「バッジ」と「ログアウトボタン」をひとまとめのグループにした -->
             <div style="display: flex; align-items: center; gap: 15px;">
+          
+                <!-- 【追加】総就活時間のバッジ表示 -->
+                <div style="display: flex; align-items: center; background: #ebf8ff; border: 1px solid #bee3f8; padding: 6px 14px; border-radius: 6px; white-space: nowrap;">
+                    <span style="font-size: 20px; margin-right: 8px;">⏳</span>
+                    <div>
+                        <div style="font-size: 10px; color: #2b6cb0; font-weight: bold; line-height: 1;">総就活時間</div>
+                        <div style="font-size: 15px; font-weight: bold; color: #3182ce; line-height: 1.2;">{{ $totalMinutes }} 分</div>
+                    </div>
+                </div>           
+                
                 <div style="display: flex; align-items: center; background: #fffaf0; border: 1px solid #feebc8; padding: 6px 14px; border-radius: 6px; white-space: nowrap;">
                     <span style="font-size: 20px; margin-right: 8px;">🔥</span>
                     <div>
