@@ -334,7 +334,10 @@
                     すごいね！その調子！
                 </h2>
                 <p style="margin: 0 0 22px 0; font-size: 14px; color: #718096;">
-                    毎日の積み重ねが就活の力になります。
+                    <!-- 毎日の積み重ねが就活の力になります。 -->
+                    <!-- {{ auth()->user()->name }}さんすごい！ -->
+                    <!-- ?->（nullセーフ演算子） -->
+                    {{ auth()->user()?->name }}さんすごい！
                 </p>
                 <button type="button" onclick="closeStreakPopup()" style="background-color: #dd6b20; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; width: 100%;">
                     やったね！
