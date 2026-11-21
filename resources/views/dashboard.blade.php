@@ -294,7 +294,20 @@
                                 <li style="padding: 10px 0; border-bottom: 1px solid #edf2f7;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <strong style="color: #3182ce; font-size: 15px;">⏱️ {{ $log->duration_minutes }} 分</strong>
-                                        <span style="color: #a0aec0; font-size: 12px;">{{ $log->created_at->format('Y/m/d H:i') }}</span>
+                                        <!-- 【旧コード】日時表示のみ -->
+                                        <!-- <span style="color: #a0aec0; font-size: 12px;">{{ $log->created_at->format('Y/m/d H:i') }}</span> -->
+                                        <!-- 【新しいコード】日時と削除ボタンを横並びにする -->
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="color: #a0aec0; font-size: 12px;">{{ $log->created_at->format('Y/m/d H:i') }}</span>
+                                            <form action="{{ route('study-logs.destroy', $log->id) }}" method="POST" style="margin: 0;" onsubmit="return confirm('この記録を削除しますか？');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" style="background: none; border: 1px solid #feb2b2; color: #c53030; padding: 2px 6px; border-radius: 4px; font-size: 11px; cursor: pointer;">
+                                                    削除
+                                                </button>
+                                            </form>
+                                        </div>
+                                    
                                     </div>
                                     @if($log->memo)
                                         <p style="margin: 4px 0 0 0; color: #4a5568; font-size: 13px;">メモ: {{ $log->memo }}</p>

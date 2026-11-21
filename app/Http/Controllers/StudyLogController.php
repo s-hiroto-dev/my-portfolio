@@ -144,4 +144,20 @@ class StudyLogController extends Controller
         // 3. 保存が終わったらダッシュボード画面に引き返す（「記録したよ！」というメッセージ付き）
         return redirect()->back()->with('success', '就活の記録を保存しました！お疲れ様です！');
     }
+
+    // ====================================================================
+    // 【新しく追加】就活記録の削除処理
+    // ====================================================================
+    public function destroy(StudyLog $studyLog)
+    {
+        // 自分の記録でない場合は弾く（セキュリティ対策）
+        if ($studyLog->user_id !== auth()->id()) {
+            abort(403);
+        }
+        // データベースから該当の記録を削除する
+        $studyLog->delete();
+
+        return redirect()->route('dashboard')->with('success', '記録を削除しました！');
+    }
+
 }

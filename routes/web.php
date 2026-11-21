@@ -111,3 +111,9 @@ Route::post('/register', [AuthController::class, 'register']);
 //add
 // --- 就活記録用のルート ---
 Route::post('/study-logs', [StudyLogController::class, 'store'])->name('study-logs.store')->middleware('auth');
+
+//add 20261121
+// 記録削除するルート
+Route::delete('/study-logs/{studyLog}', [StudyLogController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('study-logs.destroy');
