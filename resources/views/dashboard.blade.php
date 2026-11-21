@@ -321,6 +321,37 @@
 
         </div>
     </div>
+
+    <!-- ▼【20261121 add】連続記録更新時のポップアップ（session('streak_up') があるときだけ1回表示） -->
+    @if (session('streak_up'))
+        <div id="streak-popup-overlay" onclick="closeStreakPopup()" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px;">
+            <div onclick="event.stopPropagation();" style="background: #fff; border-radius: 12px; max-width: 380px; width: 100%; padding: 28px 24px; text-align: center; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);">
+                <div style="font-size: 48px; line-height: 1; margin-bottom: 12px;">🔥</div>
+                <div style="font-size: 13px; font-weight: bold; color: #dd6b20; margin-bottom: 6px;">
+                    連続 {{ session('streak_up') }} 日達成！
+                </div>
+                <h2 style="margin: 0 0 10px 0; font-size: 22px; color: #2d3748;">
+                    すごいね！その調子！
+                </h2>
+                <p style="margin: 0 0 22px 0; font-size: 14px; color: #718096;">
+                    毎日の積み重ねが就活の力になります。
+                </p>
+                <button type="button" onclick="closeStreakPopup()" style="background-color: #dd6b20; color: #fff; border: none; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; width: 100%;">
+                    やったね！
+                </button>
+            </div>
+        </div>
+
+        <script>
+            function closeStreakPopup() {
+                const overlay = document.getElementById('streak-popup-overlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
+            }
+        </script>
+    @endif
+    <!-- ▲【20261121 add】 -->
 </body>
 </html>
 

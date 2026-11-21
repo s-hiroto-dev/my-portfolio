@@ -82,8 +82,11 @@ class StudyLogController extends Controller
         }
         // ------------------------------------------------
 
+        // ▼【20261121】store()でも同じ計算を使うため、下の calculateStreakDays() メソッドを呼び出す形に変更
+        $streakDays = $this->calculateStreakDays();
+        /* 【20261121】上記の理由でコメントアウト。外部に共通処理化で呼び出し
         // ====================================================================
-        // 【新しいコード】連続取り組み日数（ストリーク）の計算ロジック
+        // 連続取り組み日数（ストリーク）の計算ロジック
         // ====================================================================
         $streakDays = 0;
         $loggedDates = auth()->user()->studyLogs()
@@ -111,6 +114,8 @@ class StudyLogController extends Controller
                 }
             }
         }
+        */
+        // ▲【20261121 ここまで】
         // ====================================================================
         /*
         // 【古いコード】連続日数計算がなかった頃のビュー呼び出し
@@ -133,7 +138,10 @@ class StudyLogController extends Controller
             'study_date' => 'required|date', // 【追加】日付のバリデーション
         ]);
 
-        // 2. データベースに保存
+        // ▼【20261121 add】保存前の連続日数を取得しておく
+        $previousStreak = $this->calculateStreakDays();
+
+        // データベースに保存
         StudyLog::create([
             'user_id' => auth()->id(), // 現在ログインしているユーザーのIDを自動でセット
             'duration_minutes' => $request->duration_minutes,
@@ -141,8 +149,22 @@ class StudyLogController extends Controller
             'study_date' => $request->study_date, // 【追加】選択された日付を保存
         ]);
 
-        // 3. 保存が終わったらダッシュボード画面に引き返す（「記録したよ！」というメッセージ付き）
+        // ▼【20261121 add】保存後の連続日数を再計算し、増えていれば1回限りのポップアップ用セッションをセット
+        $currentStreak = $this->calculateStreakDays();
+      
+        //保存が終わったらダッシュボード画面に引き返す（「記録したよ！」というメッセージ付き）
+        // ▼【20261121 change】streak_up を条件付きで乗せるため、一度変数 $redirect に入れてから返す形に変更
+        $redirect = redirect()->back()->with('success', '就活の記録を保存しました！お疲れ様です！');
+        if ($currentStreak > $previousStreak) {
+            $redirect->with('streak_up', $currentStreak);
+        }
+        return $redirect;
+        //▲【20261121 change】
+        /*
+        //保存が終わったらダッシュボード画面に引き返す（「記録したよ！」というメッセージ付き）
         return redirect()->back()->with('success', '就活の記録を保存しました！お疲れ様です！');
+        */
+        // 
     }
 
     // ====================================================================
@@ -159,5 +181,38 @@ class StudyLogController extends Controller
 
         return redirect()->route('dashboard')->with('success', '記録を削除しました！');
     }
+
+    //【20261121 追記】index() と store() の両方から連続日数を計算するための共通メソッド
+    private function calculateStreakDays(): int
+    {
+        $streakDays = 0;
+        $loggedDates = auth()->user()->studyLogs()
+            ->selectRaw('DATE(study_date) as s_date')
+            ->distinct()
+            ->orderBy('s_date', 'desc')
+            ->pluck('s_date')
+            ->toArray();
+
+        if (!empty($loggedDates)) {
+            $latestDate = \Carbon\Carbon::parse($loggedDates[0]);
+
+            // 最新の記録日が「今日」または「昨日」であれば連続カウントを有効にする
+            if ($latestDate->isToday() || $latestDate->isYesterday()) {
+                $expectedDate = $latestDate->copy();
+                foreach ($loggedDates as $dateStr) {
+                    $d = \Carbon\Carbon::parse($dateStr);
+                    if ($d->toDateString() === $expectedDate->toDateString()) {
+                        $streakDays++;
+                        $expectedDate->subDay(); // 1日前を期待値に設定して遡る
+                    } else {
+                        break; // 日付が途切れたら終了
+                    }
+                }
+            }
+        }
+
+        return $streakDays;
+    }
+    
 
 }
