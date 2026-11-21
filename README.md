@@ -2,6 +2,10 @@
 
 就職活動の取り組みを毎日の習慣として定着させるためのWebアプリケーションです。日々の活動時間やメモの記録、カレンダーでの可視化、連続継続日数のカウントと達成ポップアップによって、就活の継続とモチベーション維持をサポートします。
 
+## リンク
+
+- **GitHubリポジトリ**：https://github.com/s-hiroto-dev/my-portfolio
+
 ## 作った背景・目的
 
 就職活動は長期戦になりやすく、日々の小さな積み重ねが見えにくいことでモチベーションの維持が難しくなりがちです。「毎日少しでも就活に向き合う習慣をつくること」をテーマに、継続日数や累計時間が一目で分かり、達成感を得られる仕組みを目指して開発しました。
@@ -35,3 +39,19 @@
    - 記録保存後のリダイレクト時に一時データを渡し、連続日数が更新されたときだけポップアップが表示されるように制御しました。
 3. **セキュリティ・Git管理の意識**
    - Bladeでの安全な変数出力（エスケープ処理・nullセーフ演算子）を意識するとともに、`.env` を `.gitignore` で除外し、設定テンプレートとして `.env.example` を管理する運用としています。
+
+## 環境構築・起動手順
+
+```bash
+# 1. リポジトリのクローン
+git clone https://github.com/s-hiroto-dev/my-portfolio
+cd my-portfolio
+
+# 2. 環境変数ファイルの作成
+cp .env.example .env
+
+# 3. コンテナ起動・依存パッケージのインストール・初期設定
+docker compose up -d
+docker compose exec laravel.test composer install
+docker compose exec laravel.test php artisan key:generate
+docker compose exec laravel.test php artisan migrate
